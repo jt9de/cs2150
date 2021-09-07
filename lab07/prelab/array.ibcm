@@ -1,0 +1,64 @@
+C00A 000	       jmp 	   start 	skip around the variables
+0000 001 size      dw 	   0 	    int size
+0000 002 index_f   dw  	   0        index_f
+0000 003 index_b   dw  	   0	    index_b
+0000 004 zero 	   dw      0
+0001 005 one 	   dw      1
+0050 006 a   	   dw  	   50 	    int a[]
+4000 007 storeit   dw      4000      
+0000 008 index_f2  dw      0		index_f2
+3000 009 loadit    dw      0
+3004 00A start	   load    zero 
+4008 00B           store   index_f2     
+1000 00C 	       readH 		    read array size
+4001 00D 	       store   size
+3004 00E 	       load    zero 	index_f = 0
+4002 00F 	       store   index_f
+3001 010 	       load    size 	index_b = size - 1
+6005 011           sub     one      
+4003 012 	       store   index_b
+3001 013 loop 	   load    size 	if (index_f >= size) goto print
+6002 014 	       sub 	   index_f
+E024 015 	       jmpl    print
+D024 016 	       jmpe    print
+3007 017           load    storeit  to store a[i]
+5006 018 	       add 	   a
+5002 019 	       add 	   index_f
+401D 01A 	       store   doit	    plant the instruction
+1000 01B           readH            read[i]
+B000 01C 	       nop     0 	plant the instruction
+0000 01D doit 	   dw 	   0
+3002 01E 	       load    index_f 	i += 1
+5005 01F           add     one  
+4002 020 	       store   index_f
+C013 021 	       jmp 	   loop 	goto loop
+B000 022           nop     0        
+B000 023           nop     0
+3001 024 print 	   load    size 	if (index_f2 >= size) goto back
+6008 025 	       sub 	   index_f2
+E032 026 	       jmpl    back
+D032 027 	       jmpe    back
+3009 028           load    loadit
+5006 029 	       add     a 
+5008 02A 	       add     index_f2
+402C 02B 	       store   doitt
+0000 02C doitt	   dw      0
+1800 02D           printH   
+3008 02E           load    index_f2
+5005 02F           add     one  
+4008 030 	       store   index_f2
+C024 031 	       jmp 	   print 	goto print 
+3003 032 back      load    index_b   if (index_b < 0 ) goto xit
+B000 033           nop 
+E03F 034           jmpl    xit
+3009 035           load    loadit
+5006 036           add     a 
+5003 037           add     index_b
+4039 038           store   sss
+0000 039 sss       dw      0
+1800 03A           printH  
+3003 03B           load    index_b
+6005 03C           sub     one 
+4003 03D           store   index_b
+C032 03E           jmp     back
+0000 03F xit       halt 	    	halt

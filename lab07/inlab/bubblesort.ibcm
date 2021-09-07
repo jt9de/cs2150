@@ -1,0 +1,144 @@
+C011 000 		   jmp 	   start 	skip around vars
+0090 001 a         dw      90       int a[]
+000A 002 size      dw 	   10 	    int size
+B000 003 
+0000 004 i         dw      0        index i
+0000 005 j         dw      0        index j
+0000 006 a[j]      dw      0        int a[j]
+0001 007 a[j-1]    dw      0        int a[j-1]        
+4000 008 storeit   dw      0     
+3000 009 loadit    dw      0           
+0000 00A zero      dw      0      	       
+0001 00B one       dw      1
+B000 00C
+B000 00D
+B000 00E
+B000 00F
+B000 010
+300A 011 start	   load    zero       
+4004 012           store   i        i = 0
+4005 013 	       store   j        j = 0
+B000 014 	      
+B000 015 	       
+B000 016
+B000 017
+B000 018
+B000 019 
+3002 01A store_l   load    size 	if(j >= size) goto print
+6005 01B 	       sub 	   j    
+E02E 01C 	       jmpl    outL     go to outer loop
+D02E 01D 	       jmpe    outL
+3008 01E           load    storeit
+5001 01F 	       add 	   a
+5005 020 	       add 	   j
+4026 021 	       store   doit	    plant the instruction
+1000 022           readH            read[i]
+B000 023
+B000 024
+B000 025
+0000 026 doit 	   dw 	   0
+3005 027 	       load    j    i += 1
+500B 028           add     one  
+4005 029 	       store   j
+C01A 02A 	       jmp 	   store_l 	go back to store_l
+B000 02B
+B000 02C
+B000 02D
+3002 02E outL      load    size     if (i >= size) goto print
+6004 02F 	       sub 	   i
+E078 030 	       jmpl    print    exit this loop
+D078 031 	       jmpe    print
+3002 032           load    size     j = size - 1
+600B 033           sub     one
+4005 034 		   store   j
+B000 035
+B000 036
+B000 037
+3005 038 inL       load    j        if(i>=j) go to outL
+6004 039           sub     i
+D056 03A           jmpe    ooo      exit this loop
+E056 03B           jmpl    ooo      exit this loop
+3009 03C           load    loadit
+5001 03D           add     a 
+5005 03E           add     j
+600B 03F           sub     one
+4041 040           store   qqq   get value a[j-1]
+0000 041 qqq       dw      0
+4007 042           store   a[j-1]
+B000 043
+B000 044
+B000 045
+B000 046        
+3009 047           load    loadit
+5001 048           add     a
+5005 049           add     j
+404B 04A           store   bbb      get value -a[j-1]
+0000 04B bbb       dw      0
+4006 04C           store   a[j]
+6007 04D		   sub     a[j-1]   compare a[j-1] and a[j]
+E060 04E           jmpl    swap     jump to swap
+3005 04F           load    j        j -= 1
+600B 050           sub     one
+4005 051           store   j 
+C038 052           jmp     inL 
+B000 053
+B000 054
+B000 055
+3004 056 ooo       load    i        i += 1
+500B 057           add     one
+4004 058           store   i
+C02E 059           jmp     outL     go back to begining of outerloop
+B000 05A
+B000 05B
+B000 05C
+B000 05D
+B000 05E
+B000 05F
+3008 060 swap      load   storeit
+5001 061           add     a
+5005 062           add     j
+406A 063           store   fff      store a[j] to temp
+3007 064           load    a[j-1]
+B000 065
+B000 066
+B000 067
+B000 068
+B000 069
+0000 06A fff       dw      0
+3008 06B           load    storeit
+5001 06C           add     a 
+5005 06D           add     j 
+600B 06E           sub     one      swap a[j] and a[j-1]
+4071 06F           store   eee
+3006 070           load    a[j]
+0000 071 eee       dw      0 
+C04F 072           jmp     inL      back to inner loop
+B000 073
+B000 074
+B000 075
+B000 076
+B000 077
+300A 078    	   load    zero      j = 0
+4005 079           store   j	 
+3002 07A print     load    size      if (index >= size) goto xit
+6005 07B 	       sub 	   j
+E08F 07C 	       jmpl    xit
+D08F 07D 	       jmpe    xit
+3009 07E           load    loadit
+5001 07F 	       add     a 
+5005 080 	       add     j
+4086 081 	       store   doitt        
+B000 082
+B000 083
+B000 084
+B000 085
+B000 086 
+1800 087  doitt    printH  
+3005 088           load    j
+500B 089           add     one  
+4005 08A 	       store   j
+C07A 08B 	       jmp 	   print 	goto print 
+B000 08C
+B000 08D
+B000 08E
+0000 08F xit       halt             halt

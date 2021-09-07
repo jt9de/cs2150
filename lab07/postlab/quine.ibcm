@@ -1,0 +1,18 @@
+C005 000	       jmp 	   start 	skip around the variables
+0011 001 size      dw 	   0 	       
+0001 002 one 	   dw      1
+3000 003 loadit    dw      0   
+B000 004    
+3001 005 start     load    size
+6012 006           sub     index    if index = size, go to xit
+E011 007           jmpl
+3003 008           load    loadit
+5012 009           add     index
+400B 00A           store   doit
+300B 00B index      dw      0
+1800 00C 		   printH
+3012 00D           load    index
+5002 00E           add     one
+4012 00F           store   index
+C005 010           jmp     start
+0000 011 xit       halt
